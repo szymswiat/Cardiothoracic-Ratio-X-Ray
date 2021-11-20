@@ -1,47 +1,45 @@
+from glob import glob
 from pathlib import Path
 from typing import Any
 
-import albumentations as A
-import numpy as np
-from glob import glob
-from torch.utils.data import Dataset
+import monai.transforms as M
 from pandas import DataFrame
-import cv2
+from torch.utils.data import Dataset
 
 
 class ShenzenCXRDataset(Dataset):
+    MEAN = 0.6141
+    STD = 0.2590
+
+    MASK_MAP = ['bg', 'lung', 'heart']
 
     def __init__(
             self,
             input_df: DataFrame,
-            transforms: A.Compose = A.Compose([])
+            transforms: M.Transform = M.Compose([])
     ):
         self._df = input_df
-        self._transforms = transforms
+        self.transforms = transforms
 
     def __getitem__(self, index: int) -> Any:
-        img = self.read_img(self.get_image_path(index))
-        mask = self.read_img(self.get_mask_path(index))
+        img = self.get_image_path(index)
+        mask = self.get_mask_path(index)
 
-        aug_img = self._transforms(image=img)
-        aug_mask = self._transforms(image=mask)
+        transformed = self.transforms(dict(
+            image=img,
+            seg=mask
+        ))
 
-        return aug_img['image'], aug_mask['image']
+        return transformed['image'], transformed['seg']
+
+    def __len__(self):
+        return len(self._df)
 
     def get_image_path(self, index: int) -> Path:
         return Path(self._df['image_path'].iloc[index])
 
     def get_mask_path(self, index: int) -> Path:
         return Path(self._df['mask_path'].iloc[index])
-
-    @staticmethod
-    def read_img(path: Path) -> np.ndarray:
-        img = np.array(cv2.imread(path.as_posix()))
-
-        # if len(img.shape) == 2:
-        #     img = np.repeat(np.expand_dims(img, axis=-1), repeats=3, axis=-1)
-
-        return img
 
     @staticmethod
     def get_dataset_df(
