@@ -17,12 +17,12 @@ class ShenzenCXRDataModule(LightningDataModule):
             img_path: Path,
             mask_path: Path,
             batch_size: int = 32,
-            prob: float = 0.4,
+            augment_rate: float = 0.4,
             workers: int = 4
     ):
         super().__init__()
 
-        self.prob = prob
+        self.prob = augment_rate
         self.workers = workers
         self.batch_size = batch_size
 
@@ -57,7 +57,7 @@ class ShenzenCXRDataModule(LightningDataModule):
                       mode=['area', 'nearest']),
             M.Lambdad(['seg'], func=self.split_masks),
             middle_tf,
-            M.HistogramNormalized(['image'], num_bins=256, min=0, max=255),
+            M.HistogramNormalized(['image'], num_bins=256, min=0, max=1),
             M.RepeatChanneld(['image'], repeats=3),
             M.ToTensord(['image', 'seg']),
             # M.AsChannelLastd(['image', 'seg']),
@@ -77,7 +77,7 @@ class ShenzenCXRDataModule(LightningDataModule):
         split_set = ShenzenCXRDataset(getattr(self, f'{split}_df'), transforms)
 
         return DataLoader(split_set, batch_size=self.batch_size,
-                          shuffle=shuffle, num_workers=self.batch_size)
+                          shuffle=shuffle, num_workers=self.workers)
 
     @staticmethod
     def split_masks(mask: np.ndarray):

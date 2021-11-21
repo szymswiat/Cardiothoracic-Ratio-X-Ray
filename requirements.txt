@@ -12,3 +12,4 @@ pylibjpeg-libjpeg==1.2.0
 pytorch-lightning==1.4.8
 segmentation-models-pytorch==0.2.0
 torch==1.9.1
+torch-optimizer==0.3.0

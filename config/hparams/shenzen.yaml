@@ -1,7 +1,0 @@
-epochs: 30
-
-
-image_size: 384
-dropout_rate: 0.4
-augment_rate: 0.8
-batch_size: 180
