@@ -6,7 +6,7 @@ import numpy as np
 from pytorch_lightning import LightningDataModule
 from torch.utils.data import DataLoader
 
-from data.shenzen_cxr_dataset import ShenzenCXRDataset
+from mimage_utils.cxr_shenzen.dataset.shenzen_cxr_dataset import ShenzenCXRDataset
 from utils.CV2Reader import CV2Reader
 
 
