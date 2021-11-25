@@ -4,9 +4,12 @@ from omegaconf import DictConfig
 from pytorch_lightning import LightningModule
 from typing import List, Any
 
+from torchtools.lr_scheduler import DelayedCosineAnnealingLR
+
 from training.modules.common_training_module import CommonTrainingModule
 from monai.losses import DiceCELoss
 from monai.metrics import DiceMetric
+from torchtools.optim import RangerLars
 
 
 # from segmentation_models_pytorch.utils.metrics import IoU
@@ -32,6 +35,12 @@ class SegmentationTrainingModule(CommonTrainingModule):
         raise AttributeError('Not supported in training module.')
 
     def training_step(self, batch, batch_idx):
+        if self.trainer.is_global_zero:
+            optimizer = self.optimizers()
+            for i, group in enumerate(optimizer.param_groups):
+                self.log(f'lr/param_group_{i}', group['lr'], on_step=True, on_epoch=False,
+                         logger=True, prog_bar=True, rank_zero_only=True)
+
         x, y_true = batch
         y_pred = self.model(x, apply_act=False)
 
@@ -68,9 +77,23 @@ class SegmentationTrainingModule(CommonTrainingModule):
                                       iteration=self.trainer.current_epoch)
 
     def configure_optimizers(self):
-        optimizer = optim.SWATS(
-            self.parameters(),
-            weight_decay=0.00001
+        opt = self.hparams.optimizer
+        common_params = dict(
+            params=self.parameters(),
+            lr=opt.get('lr_initial', 0),
+            weight_decay=opt.get('weight_decay', 0)
         )
 
-        return optimizer
+        result = {}
+
+        if opt.type == 'swats':
+            result['optimizer'] = optim.SWATS(**common_params)
+        elif opt.type == 'ranger_lars':
+            result['optimizer'] = RangerLars(**common_params)
+            result['scheduler'] = DelayedCosineAnnealingLR(result['optimizer'],
+                                                           self.hparams.epochs - opt.annealing_epochs,
+                                                           opt.annealing_epochs)
+        else:
+            raise ValueError('Invalid optimizer')
+
+        return result

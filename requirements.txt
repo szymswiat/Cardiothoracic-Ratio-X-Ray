@@ -14,3 +14,4 @@ pytorch-lightning==1.4.8
 segmentation-models-pytorch==0.2.0
 torch==1.9.1
 torch-optimizer==0.3.0
+git+https://github.com/pabloppp/pytorch-tools@0.2.14#egg=torchtools

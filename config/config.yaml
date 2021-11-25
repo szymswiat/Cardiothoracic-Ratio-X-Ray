@@ -21,6 +21,12 @@ hparams:
 
   dl_workers: 4
 
+  optimizer:
+    type: ranger_lars
+    initial_lr: 0.001
+    weight_decay: 0.00001
+    annealing_epochs: 15
+
 #
 # Dataset params
 #
