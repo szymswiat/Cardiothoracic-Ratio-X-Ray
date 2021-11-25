@@ -4,8 +4,8 @@
 #
 data:
   shenzen:
-    img_path: /content/datasets/shenzen/CXR_png
-    mask_path: /content/datasets/shenzen/our_annotations
+    img_path: /content/drive/MyDrive/colab/datasets/shenzen/CXR_png
+    mask_path: /content/drive/MyDrive/colab/datasets/shenzen/our_annotations
 
 #
 # Run options

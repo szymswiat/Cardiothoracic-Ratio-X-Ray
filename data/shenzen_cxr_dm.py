@@ -28,39 +28,44 @@ class ShenzenCXRDataModule(LightningDataModule):
 
         df = ShenzenCXRDataset.get_dataset_df(img_path, mask_path)
 
+        self.all_df = df
         self.train_df = df.sample(frac=0.9, random_state=0)
         self.val_df = df.drop(index=self.train_df.index)
 
-    @property
     def _transforms_train(self):
-        middle_tf = M.Compose([
+        return M.Compose([
+            M.LoadImaged(['image', 'seg'], reader=CV2Reader()),
+            M.AddChanneld(['image', 'seg']),
+            M.Resized(['image', 'seg'], spatial_size=(608, 608), size_mode='all',
+                      mode=['area', 'nearest']),
             M.RandFlipd(['image', 'seg'], prob=self.prob, spatial_axis=1),
             M.Rand2DElasticd(['image', 'seg'], prob=self.prob,
                              spacing=70, magnitude_range=(0, 0.5),
                              mode=['bilinear', 'nearest']),
             M.RandRotated(['image', 'seg'], prob=self.prob, range_x=0.1 * math.pi,
                           mode=['bilinear', 'nearest']),
-            # M.RandAdjustContrastd(['image'], prob=self.prob, gamma=(1.0, 2.0))
+            M.RandZoomd(['image', 'seg'], prob=self.prob, min_zoom=0.6, max_zoom=1.2,
+                        mode=['area', 'nearest']),
+            M.Resized(['image', 'seg'], spatial_size=(512, 512), size_mode='all',
+                      mode=['area', 'nearest']),
+            M.RandGaussianNoised(['image'], prob=self.prob, mean=50, std=4),
+            M.Lambdad(['seg'], func=ShenzenCXRDataModule.split_masks),
+            M.HistogramNormalized(['image'], num_bins=256, min=0, max=1),
+            M.RepeatChanneld(['image'], repeats=3),
+            M.ToTensord(['image', 'seg']),
         ])
 
-        return self.get_transforms_common(middle_tf)
-
-    @property
-    def _transforms_val(self):
-        return self.get_transforms_common()
-
-    def get_transforms_common(self, middle_tf: M.Transform = M.Compose([])):
+    @staticmethod
+    def _transforms_val():
         return M.Compose([
             M.LoadImaged(['image', 'seg'], reader=CV2Reader()),
             M.AddChanneld(['image', 'seg']),
             M.Resized(['image', 'seg'], spatial_size=(512, 512), size_mode='all',
                       mode=['area', 'nearest']),
-            M.Lambdad(['seg'], func=self.split_masks),
-            middle_tf,
+            M.Lambdad(['seg'], func=ShenzenCXRDataModule.split_masks),
             M.HistogramNormalized(['image'], num_bins=256, min=0, max=1),
             M.RepeatChanneld(['image'], repeats=3),
             M.ToTensord(['image', 'seg']),
-            # M.AsChannelLastd(['image', 'seg']),
         ])
 
     def train_dataloader(self) -> DataLoader:
@@ -69,10 +74,13 @@ class ShenzenCXRDataModule(LightningDataModule):
     def val_dataloader(self) -> DataLoader:
         return self._create_dataloader('val')
 
+    def all_dataloader(self) -> DataLoader:
+        return self._create_dataloader('all')
+
     def _create_dataloader(self, split: str) -> DataLoader:
-        assert split in ['train', 'val']
+        assert split in ['train', 'val', 'all']
         shuffle = split == 'train'
-        transforms = self._transforms_train if split == 'train' else self._transforms_val
+        transforms = self._transforms_train() if split == 'train' else self._transforms_val()
 
         split_set = ShenzenCXRDataset(getattr(self, f'{split}_df'), transforms)
 
