@@ -13,24 +13,25 @@ hparams:
   pretrained: imagenet
 
   epochs: 30
-
-  image_size: 512
-  #  dropout_rate: 0.4
-  augment_rate: 0.4
   batch_size: 16
 
-  dl_workers: 4
+  image_size: 512
+  augment_rate: 0.4
 
   optimizer:
     type: ranger_lars
-    initial_lr: 0.001
+    lr_initial: 0.005
     weight_decay: 0.00001
     annealing_epochs: 15
+
+  weights_upload_interval: 3
 
 #
 # Dataset params
 #
 data:
+  dl_workers: 4
+
   shenzen:
     # Override in experiment
     img_path:

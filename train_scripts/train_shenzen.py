@@ -1,11 +1,11 @@
 import logging
 from pprint import pprint
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List
 
 import hydra
 from omegaconf import DictConfig, OmegaConf
-from pytorch_lightning import LightningModule
+from pytorch_lightning import LightningModule, Callback
 from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.utilities.cloud_io import load as pl_load
 
@@ -14,6 +14,7 @@ from inference.models.unet_module import UNetModule
 from training.common_training_object import CommonTrainingObject
 from training.modules.common_training_module import CommonTrainingModule
 from training.modules.segmentation_training_module import SegmentationTrainingModule
+from utils.upload_weigths_callback import UploadWeightsCallback
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -57,13 +58,7 @@ class ShenzenSegTrainingObject(CommonTrainingObject):
 
     def _setup_data_module(self) -> ShenzenCXRDataModule:
 
-        data_module = ShenzenCXRDataModule(
-            img_path=Path(self.cfg.data.shenzen.img_path),
-            mask_path=Path(self.cfg.data.shenzen.mask_path),
-            batch_size=self.cfg.hparams.batch_size,
-            augment_rate=self.cfg.hparams.augment_rate,
-            workers=self.cfg.hparams.dl_workers
-        )
+        data_module = ShenzenCXRDataModule(self.cfg)
 
         return data_module
 
@@ -85,6 +80,14 @@ class ShenzenSegTrainingObject(CommonTrainingObject):
         if self.trainer.is_global_zero:
             self.training_module.model.save_state_to_file(weights_path)
             self.task.update_output_model(weights_path.as_posix(), tags=['dice_best'])
+
+    def _setup_callbacks(self) -> List[Callback]:
+        callbacks = []
+        if self.cfg.hparams.weights_upload_interval:
+            w_callback = UploadWeightsCallback(self.cfg.hparams.weights_upload_interval, self.task)
+            callbacks.append(w_callback)
+
+        return callbacks
 
 
 @hydra.main('../config', 'config')

@@ -80,7 +80,7 @@ class SegmentationTrainingModule(CommonTrainingModule):
         opt = self.hparams.optimizer
         common_params = dict(
             params=self.parameters(),
-            lr=opt.get('lr_initial', 0),
+            lr=opt.get('lr_initial'),
             weight_decay=opt.get('weight_decay', 0)
         )
 

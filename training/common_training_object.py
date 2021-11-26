@@ -47,7 +47,7 @@ class CommonTrainingObject:
     def setup_training_objects(self):
         self.task = self._connect_with_task()
         self.paths = self._setup_paths()
-        self.callbacks = []
+        self.callbacks = self._setup_callbacks()
 
         self.model_checkpoint = self._setup_model_checkpoint()
         if self.model_checkpoint is not None:
@@ -172,3 +172,6 @@ class CommonTrainingObject:
                 accelerator='ddp',
             ))
         return Trainer(**trainer_params)
+
+    def _setup_callbacks(self) -> List[Callback]:
+        return []
