@@ -1,3 +1,0 @@
-[submodule "mimage_utils"]
-	path = mimage_utils
-	url = git@gitlab.com:cxrai/mimage-utils.git
