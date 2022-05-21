@@ -1,0 +1,27 @@
+# @package _global_
+#
+# Dataset params
+#
+data:
+  shenzen:
+    img_path: /content/drive/MyDrive/colab/datasets/shenzen/CXR_png
+    mask_path: /content/drive/MyDrive/colab/datasets/shenzen/our_annotations
+
+#
+# Run options
+#
+run_config:
+  #
+  # Run ClearML task locally.
+  #
+  offline: false
+  #
+  # Upload task to ClearML server and stop execution.
+  #
+  remote: true
+  #
+  # Attach DDP and GPU according to cluster config files.
+  #
+  run_ddp: false
+  run_gpu: true
+  gpus: 1

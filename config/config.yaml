@@ -1,0 +1,57 @@
+#
+# Project and task names
+#
+task_name: train
+project_name: ctr
+
+#
+# Hyperparameters
+#
+hparams:
+
+  backbone: efficientnet-b0
+  pretrained: imagenet
+
+  epochs: 30
+  batch_size: 16
+
+  image_size: 512
+  augment_rate: 0.4
+
+  optimizer:
+    type: ranger_lars
+    lr_initial: 0.005
+    weight_decay: 0.00001
+    annealing_epochs: 15
+
+  weights_upload_interval: 3
+
+#
+# Dataset params
+#
+data:
+  dl_workers: 4
+
+  shenzen:
+    # Override in experiment
+    img_path:
+    mask_path:
+
+
+#
+# Run options
+#
+run_config:
+  #
+  # Run ClearML task locally.
+  #
+  offline:
+  #
+  # Upload task to ClearML server and stop execution.
+  #
+  remote:
+  #
+  # Attach DDP and GPU according to cluster config files.
+  #
+  run_ddp:
+  run_gpu:
