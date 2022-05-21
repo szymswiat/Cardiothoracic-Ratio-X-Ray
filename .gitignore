@@ -4,6 +4,7 @@ lightning_logs/
 config/**/*local*.yaml
 outputs/
 resources/
+uck_meta/
 
 */snapshots*
 
