@@ -37,6 +37,10 @@ data:
     img_path:
     mask_path:
 
+  uck_ctr:
+    img_path:
+    mask_path:
+
 
 #
 # Run options
