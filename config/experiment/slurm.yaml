@@ -1,0 +1,39 @@
+# @package _global_
+#
+# Dataset params
+#
+data:
+  uck_ctr:
+    img_path: /net/archive/groups/plggxrays/uck_ctr/images
+    mask_path: /net/archive/groups/plggxrays/uck_ctr/annotations
+
+#
+# Run options
+#
+run_config:
+  #
+  # Run ClearML task locally.
+  #
+  offline: false
+  #
+  # Upload task to ClearML server and stop execution.
+  #
+  remote: true
+  #
+  # Attach DDP and GPU according to cluster config files.
+  #
+  run_ddp: false
+  run_gpu: true
+  gpus: 1
+
+  cluster_params:
+    nodes: 1
+    cpus_per_node: 8
+    gpus_per_node: 1
+    mem_per_node: 40
+
+    time: 00-08:00:00
+
+    cluster_specific:
+      partition: plgrid-gpu-v100
+      constraint: localfs

@@ -91,7 +91,7 @@ tests = ["pytest"]
 name = "asciitree"
 version = "0.3.3"
 description = "Draws ASCII trees."
-category = "dev"
+category = "main"
 optional = false
 python-versions = "*"
 
@@ -301,7 +301,7 @@ python-versions = "*"
 name = "fasteners"
 version = "0.17.3"
 description = "A python package that provides useful locks"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.6"
 
@@ -809,10 +809,10 @@ traitlets = "*"
 name = "mimage-utils"
 version = "0.1.0"
 description = ""
-category = "dev"
+category = "main"
 optional = false
 python-versions = "^3.9"
-develop = true
+develop = false
 
 [package.dependencies]
 monai = "^0.8.1"
@@ -821,8 +821,10 @@ torch = "^1.11.0"
 zarr = "^2.11.3"
 
 [package.source]
-type = "directory"
-url = "../mimage-utils"
+type = "git"
+url = "ssh://git@gitlab.com/cxrai/mimage-utils"
+reference = "main"
+resolved_reference = "b5c6d6d784a8304677cdd4b3f3aeb15079ddbd37"
 
 [[package]]
 name = "mistune"
@@ -1012,7 +1014,7 @@ test = ["pytest", "coverage", "requests", "testpath", "nbval", "selenium", "pyte
 name = "numcodecs"
 version = "0.9.1"
 description = "A Python package providing buffer compression and transformation codecs for use in data storage and communication applications."
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.6, <4"
 
@@ -1888,7 +1890,7 @@ multidict = ">=4.0"
 name = "zarr"
 version = "2.11.3"
 description = "An implementation of chunked, compressed, N-dimensional arrays for Python."
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.7, <4"
 
@@ -1916,7 +1918,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "0945a4a9531232a6183d8a12c283a5dc802a2a095fb75803109bbe606b15aefa"
+content-hash = "dca20e3f2659055a7bd16f8045f4ac838e2ec3e2b1a2c96208232b2433893695"
 
 [metadata.files]
 absl-py = [

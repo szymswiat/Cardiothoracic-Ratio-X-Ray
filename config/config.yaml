@@ -1,7 +1,7 @@
 #
 # Project and task names
 #
-task_name: train
+task_name: train_uck_ctr
 project_name: ctr
 
 #
@@ -13,7 +13,7 @@ hparams:
   pretrained: imagenet
 
   epochs: 30
-  batch_size: 16
+  batch_size: 32
 
   image_size: 512
   augment_rate: 0.4
@@ -59,3 +59,16 @@ run_config:
   #
   run_ddp:
   run_gpu:
+
+  cluster_params:
+    nodes:
+    cpus_per_node:
+    gpus_per_node:
+    mem_per_node:
+
+    time:
+
+    cluster_specific:
+      partition:
+      constraint:
+

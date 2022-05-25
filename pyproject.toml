@@ -21,13 +21,13 @@ segmentation-models-pytorch = ">=0.2.0"
 torch = ">=1.9.1"
 torch-optimizer = ">=0.3.0"
 torchtools = { git = "https://github.com/pabloppp/pytorch-tools", tag = "0.2.14" }
-# mimage_utils = { git = "ssh://git@gitlab.com/cxrai/mimage-utils", tag = "v0.1" }
+mimage_utils = { git = "ssh://git@gitlab.com/cxrai/mimage-utils", branch = "main" }
 itk = "^5.2.1"
 
 [tool.poetry.dev-dependencies]
 jupyter = "^1.0.0"
 notebook = "^6.4.11"
-mimage_utils = { path = "../mimage-utils", develop = true }
+# mimage_utils = { path = "../mimage-utils", develop = true }
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

@@ -158,13 +158,12 @@ class CommonTrainingObject:
             resume_from_checkpoint=self.paths.checkpoint_file,
             reload_dataloaders_every_n_epochs=1,
             log_every_n_steps=25,
-            # limit_train_batches=10
+            # limit_train_batches=10,
         )
         if self.run_gpu:
             trainer_params.update(dict(
                 gpus=self.cfg.run_config.gpus,
-                deterministic=True,
-                prepare_data_per_node=True,
+                # deterministic=True,
             ))
         if self.run_ddp:
             trainer_params.update(dict(
