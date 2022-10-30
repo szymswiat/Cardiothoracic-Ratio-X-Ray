@@ -26,7 +26,7 @@ class SegmentationTrainingModule(CommonTrainingModule):
 
         self.model = model
 
-        self.criterion = DiceCELoss(include_background=False, softmax=True)
+        self.criterion = DiceCELoss(include_background=False, sigmoid=True)
 
         self.val_dice = DiceMetric(include_background=False)
         # self.val_iou = IoU(ignore_channels=[0])

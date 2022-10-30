@@ -74,9 +74,9 @@ class UCKCXRDataModule(LightningDataModule):
             M.Lambdad(['image'], UCKCXRDataModule.reverse_channels),
             M.Resized(['image', 'seg'], spatial_size=(size, size),
                       size_mode='all', mode=['area', 'nearest']),
-            # M.HistogramNormalized(['image'], num_bins=256, min=0, max=1),
+            M.HistogramNormalized(['image'], num_bins=4100, min=0, max=1),
             M.RepeatChanneld(['image'], repeats=3),
-            # M.ToTensord(['image', 'seg']),
+            M.ToTensord(['image', 'seg']),
         ])
 
     def train_dataloader(self) -> DataLoader:

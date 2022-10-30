@@ -157,7 +157,7 @@ class CommonTrainingObject:
             default_root_dir=self.paths.log_dir,
             resume_from_checkpoint=self.paths.checkpoint_file,
             reload_dataloaders_every_n_epochs=1,
-            log_every_n_steps=25,
+            log_every_n_steps=5,
             # limit_train_batches=10,
         )
         if self.run_gpu:
