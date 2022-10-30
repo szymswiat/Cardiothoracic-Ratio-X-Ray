@@ -1,9 +1,9 @@
 from typing import Any
 
+import segmentation_models_pytorch as smp
 from omegaconf import DictConfig
 from torch import Tensor
-from torch.nn import Softmax2d
-import segmentation_models_pytorch as smp
+from torch.nn import Sigmoid
 
 from utils.loadable_module import LoadableModule
 
@@ -18,7 +18,7 @@ class UNetModule(LoadableModule):
                                  classes=3,
                                  in_channels=3)
 
-        self.final_activation = Softmax2d()
+        self.final_activation = Sigmoid()
 
     def forward(self, x: Tensor, apply_act=True) -> Any:
         features = self.backbone(x)

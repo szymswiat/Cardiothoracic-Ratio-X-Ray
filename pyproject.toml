@@ -6,7 +6,6 @@ authors = ["Szymon Swiatczynski <szymswiat.ml@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-albumentations = ">=1.0.3"
 clearml = ">=1.1.3"
 gdcm = ">=1.1"
 hydra-core = ">=1.1.1"
@@ -22,11 +21,13 @@ segmentation-models-pytorch = ">=0.2.0"
 torch = ">=1.9.1"
 torch-optimizer = ">=0.3.0"
 torchtools = { git = "https://github.com/pabloppp/pytorch-tools", tag = "0.2.14" }
-mimage_utils = { git = "ssh://git@gitlab.com/cxrai/mimage-utils", tag = "v0.1" }
+mimage_utils = { git = "ssh://git@gitlab.com/cxrai/mimage-utils", branch = "main" }
+itk = "^5.2.1"
 
 [tool.poetry.dev-dependencies]
 jupyter = "^1.0.0"
 notebook = "^6.4.11"
+# mimage_utils = { path = "../mimage-utils", develop = true }
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
